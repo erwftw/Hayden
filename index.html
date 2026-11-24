@@ -445,9 +445,12 @@ async function camStart(){
     cam.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:state.facing,width:{ideal:1280},height:{ideal:960}}});
   }catch(e){
     $("#camBtn").disabled=false;
-    camNote(e&&e.name==="NotAllowedError"
-      ?"The camera is blocked. If you opened this inside claude.ai, use the Flyer Hold Lab website link instead. In Safari, tap \"aA\" in the address bar, then Website Settings, and set Camera to Allow."
-      :"I couldn't start the camera. Close other apps using it and try again.");
+    let inFrame=false; try{inFrame=window.self!==window.top}catch(x){inFrame=true}
+    camNote(inFrame
+      ?"This copy of the app can't use the camera. Open the website version instead: erwftw.github.io/Hayden in Safari (or your home screen icon)."
+      :e&&e.name==="NotAllowedError"
+      ?"Safari said no to the camera. Tap the \"aA\" button on the left side of the address bar, tap Website Settings, change Camera to Allow, then tap Turn on camera again."
+      :"I couldn't start the camera. Close other apps using it (like FaceTime) and try again.");
     return;
   }
   cam.video.srcObject=cam.stream;
