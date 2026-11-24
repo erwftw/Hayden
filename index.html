@@ -1,120 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Flyer Hold Lab</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Flyer Hold Lab">
+<meta name="theme-color" content="#ffe3ec">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap">
 <style>
-/* Layout: one-column phone app, sticky tab bar on top, giant tap-anywhere timer screen */
+/* Layout: pastel tablet app. Sticky pink tab bar, two columns on iPad (positions | camera), full-screen hold stage. Single light pastel look by choice. */
 :root{
-  --bg:#fff6f8; --surface:#ffffff; --ink:#1d1630; --muted:#6b6280; --line:#eadde4;
-  --bow:#e4245e; --bow-soft:#ffe1ea; --gold:#e8a317; --navy:#22194a; --ok:#1f9d6b; --warn:#c77a00;
-  --display:"Bricolage Grotesque", "Arial Rounded MT Bold", system-ui, sans-serif;
-  --body:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bg:#fffbea;        /* pale yellow page */
+  --surface:#ffffff;
+  --pink:#ffe3ec;      /* pale pink */
+  --pink-2:#f9bdd2;    /* button pink */
+  --yellow:#fff1b8;    /* pale yellow card */
+  --yellow-2:#ffe27f;
+  --ink:#3d2b45;       /* plum text */
+  --muted:#7a6882;
+  --line:#f1dde5;
+  --rose:#b83a68;      /* readable accent text + lifted leg */
+  --ok:#21825a; --ok-bg:#d9f3e6; --warn:#9a5c06; --warn-bg:#fff0cc;
+  --display:"Fredoka","Arial Rounded MT Bold",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#140f24; --surface:#1f1836; --ink:#f6f0ff; --muted:#a99fc2; --line:#352b55;
-  --bow:#ff4f84; --bow-soft:#3c1631; --gold:#f5b934; --navy:#0c0818; --ok:#3ccf92; --warn:#f0a43a; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#140f24; --surface:#1f1836; --ink:#f6f0ff; --muted:#a99fc2; --line:#352b55;
-  --bow:#ff4f84; --bow-soft:#3c1631; --gold:#f5b934; --navy:#0c0818; --ok:#3ccf92; --warn:#f0a43a; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
-.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
-header.top{background:var(--navy);color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
-header.top .in{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 0}
-.brand{font-family:var(--display);font-weight:800;font-size:1.35rem;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
-.brand .bowmark{width:26px;height:16px}
-nav.tabs{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
-nav.tabs button{flex:1;background:none;border:0;color:#cfc6ea;font:600 .9rem var(--body);padding:10px 6px 12px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
-nav.tabs button[aria-selected="true"]{color:#fff;border-bottom-color:var(--bow)}
-h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
-h2{font-size:1.6rem;font-weight:800}
-h3{font-size:1.15rem;font-weight:700}
+html,body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--pink)}
+[hidden]{display:none!important}
+img,video,canvas{max-width:100%}
+.wrap{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 70px}
+header.top{background:var(--pink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5;border-bottom:1px solid var(--line)}
+header.top .in{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 0}
+.brand{font-family:var(--display);font-weight:700;font-size:1.5rem;display:flex;align-items:center;gap:10px}
+.brand svg{width:30px;height:18px}
+nav.tabs{display:flex;gap:4px;margin-top:6px;overflow-x:auto}
+nav.tabs button{flex:1;background:none;border:0;color:var(--muted);font:700 1rem var(--body);padding:10px 8px 12px;border-bottom:4px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--rose)}
+h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0;font-weight:600}
+h2{font-size:1.85rem}
+h3{font-size:1.25rem}
 .sub{color:var(--muted);margin:4px 0 0}
 section.view{display:grid;gap:18px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.card.pinkcard{background:var(--pink);border-color:var(--pink-2)}
 .label{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
-.btn{font:700 1rem var(--body);border-radius:999px;border:0;padding:12px 20px;cursor:pointer;background:var(--bow);color:#fff}
-.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
-.btn.small{padding:7px 14px;font-size:.85rem}
-.btn:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.posgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.poschip{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;display:grid;gap:4px}
-.poschip svg{width:100%;height:84px}
-.poschip b{font-family:var(--display);font-size:1rem}
+.btn{font:700 1.05rem var(--body);border-radius:999px;border:2px solid transparent;padding:12px 22px;cursor:pointer;background:var(--pink-2);color:var(--ink);min-height:48px}
+.btn.yellow{background:var(--yellow-2)}
+.btn.ghost{background:var(--surface);border-color:var(--line)}
+.btn.small{padding:7px 14px;font-size:.9rem;min-height:38px}
+.btn:disabled{opacity:.5;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+.timegrid{display:grid;gap:18px}
+@media (min-width:820px){.timegrid{grid-template-columns:1.1fr 1fr;align-items:start}}
+.timegrid>*{min-width:0;display:grid;gap:16px}
+.posgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.poschip{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:10px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;display:grid;gap:3px}
+.poschip svg{width:100%;height:80px}
+.poschip b{font-family:var(--display);font-weight:600;font-size:1.05rem}
 .poschip small{color:var(--muted);font-variant-numeric:tabular-nums}
-.poschip[aria-pressed="true"]{border-color:var(--bow);background:var(--bow-soft)}
-.seg{display:inline-flex;border:2px solid var(--line);border-radius:999px;overflow:hidden}
-.seg button{background:none;border:0;padding:8px 16px;font:700 .95rem var(--body);color:var(--ink);cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.poschip[aria-pressed="true"]{border-color:var(--rose);background:var(--pink)}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{background:none;border:0;padding:9px 16px;font:700 .95rem var(--body);color:var(--ink);cursor:pointer;min-height:42px}
+.seg button[aria-pressed="true"]{background:var(--yellow-2)}
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .spread{justify-content:space-between}
-.bigstart{width:100%;font-family:var(--display);font-size:1.5rem;padding:20px;border-radius:18px}
+.bigstart{width:100%;font-family:var(--display);font-weight:600;font-size:1.7rem;padding:20px;border-radius:22px;background:var(--pink-2)}
 .fig{stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;fill:none}
 .fig .head{fill:var(--ink)}
-.fig .floor{stroke:var(--line);stroke-width:3}
-.fig .lift{stroke:var(--bow)}
-/* timer overlay */
-#stage{position:fixed;inset:0;z-index:50;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;user-select:none;-webkit-user-select:none;touch-action:manipulation;padding:calc(env(safe-area-inset-top,0px) + 20px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 20px) max(16px,env(safe-area-inset-left,0px))}
-#stage.running{background:var(--bow)}
-#stage .clock{font-family:var(--display);font-weight:800;font-size:clamp(5rem,26vw,11rem);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-#stage .what{font-family:var(--display);font-size:1.4rem;font-weight:700}
-#stage .hint{opacity:.85;font-size:1.05rem}
-#stage .pbline{font-weight:700;opacity:.9;font-variant-numeric:tabular-nums}
-#stage .cancel{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(16px,env(safe-area-inset-right,0px));background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:999px;padding:8px 14px;font:700 .9rem var(--body);cursor:pointer}
-/* save sheet */
+.fig .floor{stroke:var(--yellow-2);stroke-width:4}
+.fig .lift{stroke:var(--rose)}
+/* camera card */
+.camcard{background:var(--yellow);border:1px solid var(--yellow-2);border-radius:18px;padding:16px;display:grid;gap:12px}
+.camview{position:relative;background:var(--ink);border-radius:14px;overflow:hidden;aspect-ratio:4/3;max-width:100%}
+.camview canvas{width:100%;height:100%;object-fit:contain;display:block}
+.camoff{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:#fff;padding:16px;font-weight:500}
+.feetpill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:6px 14px;font-weight:700;background:var(--surface);border:2px solid var(--line)}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--muted)}
+.feetpill.down .dot{background:var(--ok)} .feetpill.up .dot{background:var(--rose)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
+.toggle input{width:22px;height:22px;accent-color:var(--rose)}
+.camnote{font-size:.92rem;color:var(--ink);background:var(--surface);border-radius:12px;padding:10px 12px}
+#rawVideo{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+/* stage */
+#stage{position:fixed;inset:0;z-index:50;background:var(--yellow);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;user-select:none;-webkit-user-select:none;touch-action:manipulation;padding:calc(env(safe-area-inset-top,0px) + 56px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 20px) max(16px,env(safe-area-inset-left,0px))}
+#stage.running{background:var(--pink)}
+#stage .clock{font-family:var(--display);font-weight:700;font-size:clamp(5rem,22vw,11rem);line-height:1;font-variant-numeric:tabular-nums}
+#stage.withcam .clock{font-size:clamp(3.2rem,10vw,6rem)}
+#stage .what{font-family:var(--display);font-size:1.5rem;font-weight:600}
+#stage .hint{font-size:1.1rem;font-weight:500}
+#stage .pbline{font-weight:700;color:var(--rose);font-variant-numeric:tabular-nums}
+#stage .camslot{width:min(100%,900px);flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center}
+#stage .camslot canvas{max-height:100%;max-width:100%;border-radius:16px;object-fit:contain}
+#stage .cancel{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(16px,env(safe-area-inset-right,0px));background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:8px 16px;font:700 .95rem var(--body);cursor:pointer}
+#stage .recdot{position:absolute;top:calc(env(safe-area-inset-top,0px) + 18px);left:max(16px,env(safe-area-inset-left,0px));font-weight:700;color:var(--rose);display:flex;gap:6px;align-items:center}
+#stage .recdot::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--rose)}
+/* result */
 .result{text-align:center;display:grid;gap:10px;justify-items:center}
-.result .time{font-family:var(--display);font-size:3.4rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-.pb{background:var(--gold);color:#2a1a00;border-radius:999px;padding:4px 12px;font-weight:800;font-size:.85rem;letter-spacing:.04em}
+.result .time{font-family:var(--display);font-size:3.6rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.result video{width:100%;max-width:520px;border-radius:14px;background:var(--ink)}
+.pb{background:var(--yellow-2);border-radius:999px;padding:4px 14px;font-weight:800;font-size:.85rem;letter-spacing:.04em}
 .stars{display:flex;gap:4px}
-.stars button{background:none;border:0;font-size:2rem;cursor:pointer;color:var(--line);padding:2px;line-height:1}
-.stars button.on{color:var(--gold)}
-textarea,select,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:10px}
-/* log + ranks */
+.stars button{background:none;border:0;font-size:2.3rem;cursor:pointer;color:var(--line);padding:2px;line-height:1}
+.stars button.on{color:#f0b400}
+textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px}
+/* tables */
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1px solid var(--line)}
-td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;padding:6px;border-bottom:1px solid var(--line)}
+td{padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
 .tablebox{overflow-x:auto}
 .num{text-align:right}
-.starsmall{color:var(--gold);letter-spacing:1px;white-space:nowrap}
-.del{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1.1rem}
-.rank{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.starsmall{color:#e0a800;letter-spacing:1px;white-space:nowrap}
+.iconbtn{background:var(--pink);border:0;color:var(--ink);cursor:pointer;font:700 .85rem var(--body);border-radius:999px;padding:6px 10px;min-height:34px}
+.iconbtn.del{background:none;color:var(--muted)}
+.rank{display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .rank:last-child{border-bottom:0}
-.medal{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;background:var(--bg);border:2px solid var(--line)}
-.medal.m1{background:var(--gold);border-color:var(--gold);color:#2a1a00}
-.medal.m2{background:#c9cbd6;border-color:#c9cbd6;color:#22223a}
-.medal.m3{background:#d99a6c;border-color:#d99a6c;color:#2b1405}
-.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:var(--bow);border-radius:99px}
-.rank .t{font-family:var(--display);font-weight:800;font-size:1.3rem;font-variant-numeric:tabular-nums;text-align:right}
+.medal{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:700;background:var(--bg);border:2px solid var(--line)}
+.medal.m1{background:#ffd75e;border-color:#ffd75e}
+.medal.m2{background:#e3e3ee;border-color:#e3e3ee}
+.medal.m3{background:#f4c7a8;border-color:#f4c7a8}
+.bar{height:10px;border-radius:99px;background:var(--yellow);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--pink-2);border-radius:99px}
+.rank .t{font-family:var(--display);font-weight:700;font-size:1.35rem;font-variant-numeric:tabular-nums;text-align:right}
 .rank .t small{display:block;font-family:var(--body);font-weight:500;font-size:.75rem;color:var(--muted)}
-.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.75rem;font-weight:700;border:1.5px solid currentColor}
-.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.bow{color:var(--bow)}
-.banner{background:var(--bow-soft);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.focus{display:grid;gap:10px}
-.focus li{margin-bottom:8px}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.75rem;font-weight:700}
+.pill.ok{color:var(--ok);background:var(--ok-bg)} .pill.warn{color:var(--warn);background:var(--warn-bg)} .pill.bow{color:var(--rose);background:var(--pink)}
+.banner{background:var(--pink);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 ul.clean{padding-left:1.1rem;margin:6px 0 0}
+ul.clean li{margin-bottom:6px}
+/* videos */
+.vidgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.vid{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:grid}
+.vid video{width:100%;aspect-ratio:4/3;object-fit:contain;background:var(--ink);display:block}
+.vid .meta{padding:10px 12px;display:grid;gap:8px}
+.vid .meta b{font-family:var(--display);font-weight:600;font-size:1.1rem}
 /* learn */
-details.pos{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+details.pos{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+details.pos[open]{background:var(--surface);border-color:var(--pink-2)}
 details.pos summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;padding:12px}
 details.pos summary::-webkit-details-marker{display:none}
 details.pos summary svg{width:72px;height:72px}
 details.pos .body{padding:0 16px 16px;display:grid;gap:12px}
 .stretch{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px dashed var(--line)}
-.stretch p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
-.safety{border-left:4px solid var(--gold);padding:8px 12px;background:var(--surface);border-radius:0 10px 10px 0;font-size:.95rem}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:700;z-index:60}
+.stretch p{margin:2px 0 0;color:var(--muted);font-size:.93rem}
+.safety{border-left:5px solid var(--yellow-2);padding:10px 14px;background:var(--surface);border-radius:0 12px 12px 0;font-size:.95rem}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;z-index:70;max-width:calc(100% - 32px);text-align:center}
 @media (prefers-reduced-motion: no-preference){
   #stage .clock.pop{animation:pop .5s ease}
   @keyframes pop{0%{transform:scale(1.25)}100%{transform:scale(1)}}
 }
 </style>
+</head>
+<body>
 
 <header class="top"><div class="in">
-  <div class="brand"><svg class="bowmark" viewBox="0 0 26 16" aria-hidden="true"><path d="M13 8 L2 1 Q0 8 2 15 Z M13 8 L24 1 Q26 8 24 15 Z" fill="#ff4f84"/><circle cx="13" cy="8" r="3" fill="#ffd166"/></svg>Flyer Hold Lab</div>
+  <div class="brand"><svg viewBox="0 0 26 16" aria-hidden="true"><path d="M13 8 L2 1 Q0 8 2 15 Z M13 8 L24 1 Q26 8 24 15 Z" fill="#f48fb1"/><circle cx="13" cy="8" r="3" fill="#ffd75e"/></svg>Flyer Hold Lab</div>
   <nav class="tabs" role="tablist">
     <button role="tab" data-tab="time" aria-selected="true">Time a hold</button>
     <button role="tab" data-tab="ranks" aria-selected="false">Rankings</button>
+    <button role="tab" data-tab="videos" aria-selected="false">Videos</button>
     <button role="tab" data-tab="log" aria-selected="false">My log</button>
     <button role="tab" data-tab="learn" aria-selected="false">Improve</button>
   </nav>
@@ -126,75 +177,91 @@ details.pos .body{padding:0 16px 16px;display:grid;gap:12px}
 <section class="view" id="v-time">
   <div>
     <h2>Floor hold timer</h2>
-    <p class="sub">Pick a position, tap start, get set during the countdown. When you come down, tap anywhere and the clock stops.</p>
+    <p class="sub">Pick a position and tap Start. With the camera on, the clock starts when your foot leaves the floor and stops when both feet are back down. It records a video too.</p>
   </div>
   <div id="exampleBanner" class="banner" hidden>
     <span>You're looking at <b>example holds</b> so you can see how it works.</span>
     <button class="btn small" id="clearExamples">Clear examples</button>
   </div>
-  <div>
-    <div class="label" style="margin-bottom:8px">Position</div>
-    <div class="posgrid" id="posPicker"></div>
-  </div>
-  <div class="row spread">
-    <div class="row">
-      <span class="label">Standing leg</span>
-      <div class="seg" id="legSeg">
-        <button data-leg="L" aria-pressed="true">Left</button>
-        <button data-leg="R" aria-pressed="false">Right</button>
+  <div class="timegrid">
+    <div>
+      <div>
+        <div class="label" style="margin-bottom:8px">Position</div>
+        <div class="posgrid" id="posPicker"></div>
+      </div>
+      <div class="row spread">
+        <div class="row">
+          <span class="label">Standing leg</span>
+          <div class="seg" id="legSeg">
+            <button data-leg="L" aria-pressed="true">Left</button>
+            <button data-leg="R" aria-pressed="false">Right</button>
+          </div>
+        </div>
+        <div class="row">
+          <span class="label">Countdown</span>
+          <div class="seg" id="cdSeg">
+            <button data-cd="3" aria-pressed="false">3s</button>
+            <button data-cd="5" aria-pressed="true">5s</button>
+            <button data-cd="10" aria-pressed="false">10s</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row">
-      <span class="label">Countdown</span>
-      <div class="seg" id="cdSeg">
-        <button data-cd="3" aria-pressed="false">3s</button>
-        <button data-cd="5" aria-pressed="true">5s</button>
-        <button data-cd="10" aria-pressed="false">10s</button>
+
+    <div>
+      <div class="camcard">
+        <div class="row spread">
+          <h3>Camera</h3>
+          <div class="row">
+            <button class="btn small ghost" id="flipBtn" hidden>Flip camera</button>
+            <button class="btn small" id="camBtn">Turn on camera</button>
+          </div>
+        </div>
+        <div class="camview" id="camView">
+          <div class="camoff" id="camOff">Prop your iPad up so it can see your whole body, head to toes, then turn on the camera.</div>
+        </div>
+        <div class="row spread">
+          <span class="feetpill" id="feetPill"><span class="dot"></span><span id="feetText">Camera off</span></span>
+          <span class="label" id="poseStatus"></span>
+        </div>
+        <div class="row">
+          <label class="toggle"><input type="checkbox" id="autoChk" checked> Auto start and stop</label>
+          <label class="toggle"><input type="checkbox" id="recChk" checked> Record video</label>
+        </div>
+        <div class="camnote" id="camNote" hidden></div>
       </div>
+      <button class="btn bigstart" id="startBtn">Start</button>
+      <p class="sub" style="margin-top:-6px">You can always tap the screen to stop the clock, even with the camera on. On a keyboard, the space bar works too.</p>
     </div>
   </div>
-  <button class="btn bigstart" id="startBtn">Start</button>
-  <p class="sub" style="margin-top:-6px">On a laptop you can press the space bar to stop. Prop your phone up so you can tap it fast, or have a friend tap for you.</p>
-  <div class="card" id="saveCard" hidden></div>
+  <div class="card pinkcard" id="saveCard" hidden></div>
 </section>
 
 <!-- RANKS -->
 <section class="view" id="v-ranks" hidden>
-  <div>
-    <h2>Rankings</h2>
-    <p class="sub">Your positions ranked by your longest hold, plus your top holds of all time.</p>
-  </div>
-  <div class="card">
-    <div class="row spread"><h3>My positions</h3><span class="label">Best hold</span></div>
-    <div id="posRanks"></div>
-  </div>
-  <div class="card">
-    <h3>Top 10 holds</h3>
-    <div class="tablebox"><table id="topTable"></table></div>
-  </div>
-  <div class="card">
-    <h3>Left vs right</h3>
-    <p class="sub">Flyers should be strong on both legs. Big gaps show which side to practice.</p>
-    <div class="tablebox"><table id="legTable"></table></div>
-  </div>
+  <div><h2>Rankings</h2><p class="sub">Your positions ranked by your longest hold, plus your top holds of all time.</p></div>
+  <div class="card"><div class="row spread"><h3>My positions</h3><span class="label">Best hold</span></div><div id="posRanks"></div></div>
+  <div class="card"><h3>Top 10 holds</h3><div class="tablebox"><table id="topTable"></table></div></div>
+  <div class="card"><h3>Left vs right</h3><p class="sub">Flyers need to be strong on both legs. A big gap shows which side to practice.</p><div class="tablebox"><table id="legTable"></table></div></div>
+</section>
+
+<!-- VIDEOS -->
+<section class="view" id="v-videos" hidden>
+  <div><h2>My videos</h2><p class="sub">Every hold you recorded, with the timer stamped on the video. Watch your form, then save the best ones to Photos.</p></div>
+  <div id="vidEmpty" class="card" hidden><p style="margin:0">No videos yet. Turn on the camera on the <b>Time a hold</b> tab and leave <b>Record video</b> checked.</p></div>
+  <div class="vidgrid" id="vidGrid"></div>
+  <p class="sub" id="vidStorage"></p>
 </section>
 
 <!-- LOG -->
 <section class="view" id="v-log" hidden>
-  <div>
-    <h2>My log</h2>
-    <p class="sub">Every hold you've saved, newest first.</p>
-  </div>
-  <div class="row">
-    <select id="logFilter" aria-label="Filter by position" style="max-width:240px"></select>
-  </div>
+  <div><h2>My log</h2><p class="sub">Every hold you've saved, newest first.</p></div>
+  <div class="row"><select id="logFilter" aria-label="Filter by position" style="max-width:260px"></select></div>
   <div class="card"><div class="tablebox"><table id="logTable"></table></div></div>
   <div class="card">
     <h3>Back up my holds</h3>
-    <p class="sub">Your holds are saved in this browser only. Copy a backup code and paste it somewhere safe (like Notes). Paste it below to bring your holds back on another device.</p>
-    <div class="row" style="margin-top:10px">
-      <button class="btn small" id="copyBackup">Copy backup code</button>
-    </div>
+    <p class="sub">Your holds are saved on this device only. Copy a backup code and keep it somewhere safe, like Notes. Paste it below to bring your holds back. Videos aren't in the code, so save the ones you love to Photos.</p>
+    <div class="row" style="margin-top:10px"><button class="btn small" id="copyBackup">Copy backup code</button></div>
     <textarea id="backupBox" rows="3" placeholder="Paste a backup code here" style="margin-top:10px"></textarea>
     <div class="row" style="margin-top:8px"><button class="btn small ghost" id="loadBackup">Load backup</button></div>
   </div>
@@ -202,28 +269,28 @@ details.pos .body{padding:0 16px 16px;display:grid;gap:12px}
 
 <!-- LEARN -->
 <section class="view" id="v-learn" hidden>
-  <div>
-    <h2>Get better</h2>
-    <p class="sub">Your focus list comes from your own holds. Below it, every position has body checks and stretches with a built-in stretch timer.</p>
-  </div>
-  <div class="card focus" id="coach"></div>
-  <div class="safety"><b>Stretch safe:</b> warm up first (jumping jacks or a jog for 3–5 minutes). Stretch until you feel a pull, never pain. Breathe and don't bounce. Tell a coach or parent if something hurts.</div>
+  <div><h2>Get better</h2><p class="sub">Your focus list comes from your own holds. Below it, every position has body checks and stretches with a stretch timer.</p></div>
+  <div class="card pinkcard" id="coach"></div>
+  <div class="safety"><b>Stretch safe:</b> warm up first with jumping jacks or a jog for 3–5 minutes. Stretch until you feel a pull, never pain. Breathe and don't bounce. Tell a coach or parent if something hurts.</div>
   <div id="learnList" style="display:grid;gap:12px"></div>
 </section>
 </main>
 
+<video id="rawVideo" playsinline muted autoplay></video>
+
 <div id="stage" hidden>
+  <span class="recdot" id="recDot" hidden>REC</span>
   <button class="cancel" id="cancelBtn">Cancel</button>
   <div class="what" id="stageWhat"></div>
   <div class="clock" id="stageClock">0.00</div>
   <div class="hint" id="stageHint"></div>
   <div class="pbline" id="stagePb"></div>
+  <div class="camslot" id="camSlot"></div>
 </div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
-// ---------- Positions ----------
-// Stick figure joints in a 100x120 box. hip, neck, head, standing leg, lifted leg (bow color), arms.
+// ================= Positions =================
 const POS = [
  {id:"heel", name:"Heel Stretch", goal:8,
   fig:{neck:[50,30],head:[50,19],lift:[[50,62],[67,10]],armA:[[50,34],[66,13]],armB:[[50,34],[30,12]]},
@@ -234,7 +301,7 @@ const POS = [
  {id:"arabesque", name:"Arabesque", goal:8,
   fig:{neck:[38,36],head:[32,27],lift:[[50,62],[92,52]],armA:[[38,40],[12,34]],armB:[[38,40],[40,14]]},
   what:"Stand on one leg and lift the other leg straight behind you. Arms reach out in front and up.",
-  checks:["Back leg straight and turned out","Back foot pointed, toes higher than hip if you can","Chest lifted, don't let it drop","Standing knee locked","Arms strong, not floppy"],
+  checks:["Back leg straight and turned out","Back foot pointed, as high as your hip if you can","Chest lifted, don't let it drop","Standing knee locked","Arms strong, not floppy"],
   fixes:{wobble:"Look at one spot in front of you and pull your belly button in.",form:"Lift from your back muscles, not by tipping your chest forward."},
   stretches:["lunge","cobra","frontsplit","bridge"]},
  {id:"scale", name:"Scale", goal:7,
@@ -270,18 +337,18 @@ const POS = [
 ];
 const STRETCH = {
  hamstring:{name:"Standing hamstring stretch", secs:30, how:"Put your heel on a low step, keep the leg straight, and hinge forward from your hips with a flat back."},
- pancake:{name:"Pike fold", secs:30, how:"Sit with legs straight together, reach for your toes with a long back. Walk hands forward slowly."},
+ pancake:{name:"Pike fold", secs:30, how:"Sit with legs straight together and reach for your toes with a long back. Walk your hands forward slowly."},
  frontsplit:{name:"Front splits", secs:45, how:"Slide into splits with blocks or pillows under your hands. Square your hips. Do both legs."},
  heelwall:{name:"Wall heel stretch", secs:30, how:"Stand facing a wall, put your heel high on it with the leg straight, and stand tall. Lock both knees."},
  lunge:{name:"Low lunge hip flexor stretch", secs:30, how:"Back knee on the floor, front knee over the ankle. Push your hips forward and lift your chest."},
- cobra:{name:"Cobra", secs:20, how:"Lie on your belly, hands under shoulders, press up and lift your chest. Keep hips on the floor."},
- bridge:{name:"Bridge", secs:20, how:"Lie on your back, hands by your ears, push up into a bridge. Push your shoulders over your hands."},
- quad:{name:"Standing quad stretch", secs:30, how:"Hold your foot behind you, knees together, and stand tall. Push hips forward a little."},
+ cobra:{name:"Cobra", secs:20, how:"Lie on your belly, hands under your shoulders, and press up to lift your chest. Keep your hips on the floor."},
+ bridge:{name:"Bridge", secs:20, how:"Lie on your back, hands by your ears, and push up into a bridge. Push your shoulders over your hands."},
+ quad:{name:"Standing quad stretch", secs:30, how:"Hold your foot behind you, knees together, and stand tall. Push your hips forward a little."},
  straddle:{name:"Straddle reach", secs:30, how:"Sit with legs wide. Reach to each leg, then the middle, keeping your knees pointed up."},
  sidesplit:{name:"Side-lying leg pull", secs:30, how:"Lie on your side, hold your top heel and pull the straight leg up toward your ear."},
  shoulder:{name:"Shoulder opener", secs:30, how:"Hold a towel overhead with hands wide and slowly bring it back behind your head. Arms straight."},
  kneelscorp:{name:"Kneeling scorpion", secs:20, how:"Kneel on one knee, reach back over your head with both hands for your back foot, and pull gently."},
- butterfly:{name:"Butterfly", secs:30, how:"Sit with the soles of your feet together, knees out. Sit tall and press knees gently down."},
+ butterfly:{name:"Butterfly", secs:30, how:"Sit with the soles of your feet together, knees out. Sit tall and press your knees gently down."},
  calf:{name:"Calf stretch", secs:30, how:"Hands on a wall, one leg back with the heel down and knee straight. Lean in."},
 };
 const posById = id => POS.find(p=>p.id===id);
@@ -291,17 +358,14 @@ function figSVG(p){
   const pl=pts=>`<polyline points="${pts.map(q=>q.join(",")).join(" ")}"/>`;
   return `<svg viewBox="0 0 100 120" class="fig" role="img" aria-label="${p.name} stick figure">
     <line class="floor" x1="20" y1="117" x2="80" y2="117"/>
-    ${pl([hip,knee,foot])}
-    ${pl([hip,f.neck])}
+    ${pl([hip,knee,foot])}${pl([hip,f.neck])}
     <circle class="head" cx="${f.head[0]}" cy="${f.head[1]}" r="7"/>
-    ${pl(f.armA)}${pl(f.armB)}
-    <g class="lift">${pl(f.lift)}</g>
-  </svg>`;
+    ${pl(f.armA)}${pl(f.armB)}<g class="lift">${pl(f.lift)}</g></svg>`;
 }
 
-// ---------- Storage ----------
+// ================= Storage =================
 const KEY="flyerHoldLab.v1";
-let state={holds:[],pos:"heel",leg:"L",cd:5};
+let state={holds:[],pos:"heel",leg:"L",cd:5,auto:true,rec:true,facing:"user"};
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&Array.isArray(s.holds)){state=Object.assign(state,s);return true}}catch(e){}return false}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
 function seedExamples(){
@@ -313,25 +377,36 @@ function seedExamples(){
 }
 if(!load()){seedExamples();save()}
 
-// ---------- Helpers ----------
+// Videos live in IndexedDB (blobs), keyed by hold id.
+const vdb={
+  _db:null,
+  open(){if(this._db)return this._db;this._db=new Promise((res,rej)=>{try{const r=indexedDB.open("flyerHoldLabVideos",1);r.onupgradeneeded=()=>r.result.createObjectStore("videos");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});return this._db},
+  async tx(mode,fn){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction("videos",mode);const out=fn(t.objectStore("videos"));t.oncomplete=()=>res(out&&out.result);t.onerror=()=>rej(t.error)})},
+  put(id,rec){return this.tx("readwrite",s=>s.put(rec,id))},
+  get(id){return this.tx("readonly",s=>s.get(id))},
+  del(id){return this.tx("readwrite",s=>s.delete(id))},
+};
+
+// ================= Helpers =================
 const $=s=>document.querySelector(s);
 const fmt=s=>s.toFixed(2);
 const starStr=n=>"★".repeat(n)+"☆".repeat(5-n);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const legName=l=>l==="L"?"Left":"Right";
 function best(pos,leg){let b=null;for(const h of state.holds){if(h.pos===pos&&(!leg||h.leg===leg)&&(!b||h.secs>b.secs))b=h}return b}
-function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2200)}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
 function dateStr(ts){return new Date(ts).toLocaleDateString(undefined,{month:"short",day:"numeric"})}
 
-// ---------- Tabs ----------
+// ================= Tabs =================
 document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 function showTab(t){
   document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
   document.querySelectorAll("section.view").forEach(v=>v.hidden=v.id!=="v-"+t);
-  ({time:renderTime,ranks:renderRanks,log:renderLog,learn:renderLearn})[t]();
+  ({time:renderTime,ranks:renderRanks,videos:renderVideos,log:renderLog,learn:renderLearn})[t]();
   window.scrollTo(0,0);
 }
 
-// ---------- Time view ----------
+// ================= Time view =================
 function renderTime(){
   $("#exampleBanner").hidden=!state.holds.some(h=>h.example);
   $("#posPicker").innerHTML=POS.map(p=>{const b=best(p.id,state.leg);
@@ -339,83 +414,260 @@ function renderTime(){
   document.querySelectorAll(".poschip").forEach(c=>c.onclick=()=>{state.pos=c.dataset.pos;save();renderTime()});
   document.querySelectorAll("#legSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.leg===state.leg));
   document.querySelectorAll("#cdSeg button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.cd===state.cd));
+  $("#autoChk").checked=state.auto; $("#recChk").checked=state.rec;
 }
 document.querySelectorAll("#legSeg button").forEach(b=>b.onclick=()=>{state.leg=b.dataset.leg;save();renderTime()});
 document.querySelectorAll("#cdSeg button").forEach(b=>b.onclick=()=>{state.cd=+b.dataset.cd;save();renderTime()});
+$("#autoChk").onchange=e=>{state.auto=e.target.checked;save()};
+$("#recChk").onchange=e=>{state.rec=e.target.checked;save()};
 $("#clearExamples").onclick=()=>{state.holds=state.holds.filter(h=>!h.example);save();renderTime();toast("Examples cleared. Time to set real records!")};
 
-// ---------- Timer ----------
-let audio=null, phase="idle", t0=0, raf=0, cdTimer=0, wake=null, lastSecs=0;
-function beep(freq=880,dur=.12){try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.connect(g);g.connect(audio.destination);g.gain.setValueAtTime(.25,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+dur);o.start();o.stop(audio.currentTime+dur)}catch(e){}}
+// ================= Camera + pose =================
+const MP="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+const MODEL="https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
+const cam={on:false,stream:null,video:$("#rawVideo"),canvas:document.createElement("canvas"),landmarker:null,loading:false,lastVT:-1,lm:null,feet:"unknown",raf:0};
+cam.ctx=cam.canvas.getContext("2d");
+$("#camView").appendChild(cam.canvas);
+const BONES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,29],[29,31],[27,31],[28,30],[30,32],[28,32]];
+
+function camNote(msg){const n=$("#camNote");n.hidden=!msg;n.textContent=msg||""}
+function setFeet(f){
+  cam.feet=f; const p=$("#feetPill"); p.className="feetpill "+(f==="down"?"down":f==="up"?"up":"");
+  $("#feetText").textContent={down:"Both feet down",up:"One foot up",unknown:cam.landmarker?"Can't see both feet":cam.poseFailed?"Tap to stop":"Feet: loading…",off:"Camera off"}[f];
+}
+$("#camBtn").onclick=()=>cam.on?camStop():camStart();
+$("#flipBtn").onclick=async()=>{state.facing=state.facing==="user"?"environment":"user";save();camStop();await camStart()};
+
+async function camStart(){
+  if(!navigator.mediaDevices?.getUserMedia){camNote("This browser can't use the camera. Open Flyer Hold Lab in Safari on your iPad.");return}
+  $("#camBtn").disabled=true; camNote("");
+  try{
+    cam.stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:state.facing,width:{ideal:1280},height:{ideal:960}}});
+  }catch(e){
+    $("#camBtn").disabled=false;
+    camNote(e&&e.name==="NotAllowedError"
+      ?"The camera is blocked. If you opened this inside claude.ai, use the Flyer Hold Lab website link instead. In Safari, tap \"aA\" in the address bar, then Website Settings, and set Camera to Allow."
+      :"I couldn't start the camera. Close other apps using it and try again.");
+    return;
+  }
+  cam.video.srcObject=cam.stream;
+  try{await cam.video.play()}catch(e){}
+  cam.on=true; $("#camBtn").disabled=false; $("#camBtn").textContent="Turn off camera"; $("#flipBtn").hidden=false;
+  $("#camOff").hidden=true; setFeet("unknown");
+  cancelAnimationFrame(cam.raf); drawLoop();
+  loadPose();
+}
+function camStop(){
+  cam.on=false; cancelAnimationFrame(cam.raf);
+  cam.stream?.getTracks().forEach(t=>t.stop()); cam.stream=null; cam.video.srcObject=null;
+  $("#camBtn").textContent="Turn on camera"; $("#flipBtn").hidden=true; $("#camOff").hidden=false; setFeet("off"); $("#poseStatus").textContent="";
+}
+async function loadPose(){
+  if(cam.landmarker||cam.loading)return;
+  cam.loading=true; $("#poseStatus").textContent="Loading body tracking…";
+  try{
+    const vision=await import(MP+"/vision_bundle.mjs");
+    const files=await vision.FilesetResolver.forVisionTasks(MP+"/wasm");
+    const opts=d=>({baseOptions:{modelAssetPath:MODEL,delegate:d},runningMode:"VIDEO",numPoses:1});
+    try{cam.landmarker=await vision.PoseLandmarker.createFromOptions(files,opts("GPU"))}
+    catch(e){cam.landmarker=await vision.PoseLandmarker.createFromOptions(files,opts("CPU"))}
+    $("#poseStatus").textContent="Body tracking ready";
+  }catch(e){
+    $("#poseStatus").textContent=""; cam.poseFailed=true; setFeet(cam.feet);
+    camNote("Body tracking couldn't load, so auto start and stop is off. You can still record video and tap to stop. Check your internet and reload to try again.");
+  }
+  cam.loading=false;
+}
+
+// Decide if both feet are on the floor. Uses the lowest point of each foot, compared to leg length.
+function footState(lm,w,h){
+  if(!lm)return"unknown";
+  const P=i=>({x:lm[i].x*w,y:lm[i].y*h,v:lm[i].visibility??1});
+  const footY=(a,b,c)=>Math.max(P(a).y,P(b).y,P(c).y);
+  const la=P(27),ra=P(28),lh=P(23),rh=P(24);
+  const legLen=(Math.hypot(la.x-lh.x,la.y-lh.y)+Math.hypot(ra.x-rh.x,ra.y-rh.y))/2;
+  if(legLen<20)return"unknown";
+  const lVis=la.v>.5&&la.y<h*1.02, rVis=ra.v>.5&&ra.y<h*1.02;
+  if(!lVis||!rVis){return (lh.v>.5&&rh.v>.5&&(lVis||rVis))?"up":"unknown"}
+  const diff=Math.abs(footY(27,29,31)-footY(28,30,32))/legLen;
+  if(diff<0.09)return"down";
+  if(diff>0.16)return"up";
+  return cam.feet==="down"||cam.feet==="up"?cam.feet:"unknown"; // in-between keeps last state
+}
+
+function drawLoop(){
+  if(!cam.on)return;
+  const v=cam.video, c=cam.canvas, ctx=cam.ctx;
+  if(v.readyState>=2&&v.videoWidth){
+    const scale=Math.min(1,1280/v.videoWidth), w=Math.round(v.videoWidth*scale), h=Math.round(v.videoHeight*scale);
+    if(c.width!==w||c.height!==h){c.width=w;c.height=h}
+    const mirror=state.facing==="user";
+    ctx.save(); if(mirror){ctx.translate(w,0);ctx.scale(-1,1)} ctx.drawImage(v,0,0,w,h); ctx.restore();
+    if(cam.landmarker&&v.currentTime!==cam.lastVT){
+      cam.lastVT=v.currentTime;
+      try{const r=cam.landmarker.detectForVideo(v,performance.now());cam.lm=r.landmarks&&r.landmarks[0]||null}catch(e){}
+      const f=footState(cam.lm,w,h); if(f!==cam.feet)setFeet(f);
+      poseTick(f);
+    }
+    if(cam.lm){ // skeleton
+      const X=i=>(mirror?1-cam.lm[i].x:cam.lm[i].x)*w, Y=i=>cam.lm[i].y*h;
+      ctx.lineWidth=Math.max(3,w/240); ctx.strokeStyle="rgba(255,227,236,.9)"; ctx.lineCap="round";
+      for(const[a,b]of BONES){if((cam.lm[a].visibility??1)>.4&&(cam.lm[b].visibility??1)>.4){ctx.beginPath();ctx.moveTo(X(a),Y(a));ctx.lineTo(X(b),Y(b));ctx.stroke()}}
+      ctx.fillStyle=cam.feet==="down"?"#5fd39b":cam.feet==="up"?"#ff6fa3":"#ffe27f";
+      for(const i of[27,28,31,32]){ctx.beginPath();ctx.arc(X(i),Y(i),Math.max(6,w/110),0,7);ctx.fill()}
+    }
+    drawOverlay(ctx,w,h);
+  }
+  cam.raf=requestAnimationFrame(drawLoop);
+}
+// Timer stamp burned into the recorded video.
+function drawOverlay(ctx,w,h){
+  if(phase==="idle"&&!overlayFinal)return;
+  const p=posById(state.pos); const s=Math.max(1,w/640);
+  let big="";
+  if(phase==="countdown")big=String(cdLeft);
+  else if(phase==="waiting")big="GO";
+  else if(phase==="running")big=fmt((performance.now()-t0)/1000)+"s";
+  else if(overlayFinal)big=overlayFinal;
+  ctx.fillStyle="rgba(255,251,234,.88)"; ctx.beginPath(); ctx.roundRect?ctx.roundRect(12*s,12*s,250*s,86*s,16*s):ctx.rect(12*s,12*s,250*s,86*s); ctx.fill();
+  ctx.fillStyle="#3d2b45"; ctx.font=`600 ${16*s}px Fredoka, system-ui, sans-serif`; ctx.textBaseline="top";
+  ctx.fillText(`${p.name} · ${legName(state.leg)}`,24*s,20*s);
+  ctx.font=`700 ${42*s}px Fredoka, system-ui, sans-serif`; ctx.fillStyle="#b83a68";
+  ctx.fillText(big,24*s,44*s);
+}
+
+// ================= Timer state machine =================
+// idle -> countdown -> (waiting for lift, if auto) -> running -> idle
+let audio=null, phase="idle", t0=0, raf=0, cdTimer=0, cdLeft=0, wake=null, lastSecs=0, downSince=0, overlayFinal="";
+let rec=null, recChunks=[], recMime="", recPromise=null, recStopTimer=0;
+function beep(freq=880,dur=.12){try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();if(audio.state==="suspended")audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.connect(g);g.connect(audio.destination);g.gain.setValueAtTime(.25,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+dur);o.start();o.stop(audio.currentTime+dur)}catch(e){}}
 async function lockScreen(){try{wake=await navigator.wakeLock?.request("screen")}catch(e){}}
 function unlockScreen(){try{wake?.release()}catch(e){}wake=null}
+const autoOn=()=>cam.on&&!!cam.landmarker&&state.auto;
+
+function startRecording(){
+  recPromise=null;
+  if(!(cam.on&&state.rec&&window.MediaRecorder))return;
+  let stream=null;
+  try{stream=cam.canvas.captureStream?cam.canvas.captureStream(30):null}catch(e){}
+  if(!stream)stream=cam.stream;
+  recMime=["video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm"].find(m=>MediaRecorder.isTypeSupported?.(m))||"";
+  let r;
+  try{r=new MediaRecorder(stream,recMime?{mimeType:recMime,videoBitsPerSecond:2500000}:undefined)}catch(e){rec=null;return}
+  rec=r; const chunks=[]; const mime=recMime;
+  recPromise=new Promise(res=>{
+    r.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+    r.onstop=()=>res(chunks.length?new Blob(chunks,{type:r.mimeType||mime||"video/mp4"}):null);
+  });
+  rec.start(500); $("#recDot").hidden=false;
+}
+function stopRecording(delay){
+  if(!rec)return;
+  const r=rec; rec=null;
+  recStopTimer=setTimeout(()=>{try{r.state!=="inactive"&&r.stop()}catch(e){} $("#recDot").hidden=true; overlayFinal=""},delay);
+}
 
 $("#startBtn").onclick=startCountdown;
 function startCountdown(){
   const p=posById(state.pos), b=best(p.id,state.leg);
-  $("#saveCard").hidden=true;
+  $("#saveCard").hidden=true; overlayFinal=""; clearTimeout(recStopTimer);
   const st=$("#stage"); st.hidden=false; st.classList.remove("running");
-  $("#stageWhat").textContent=`${p.name} · ${state.leg==="L"?"Left":"Right"} leg`;
+  st.classList.toggle("withcam",cam.on);
+  if(cam.on)$("#camSlot").appendChild(cam.canvas);
+  $("#stageWhat").textContent=`${p.name} · ${legName(state.leg)} leg`;
   $("#stagePb").textContent=b?`Beat ${fmt(b.secs)}s`:`Goal: ${p.goal}s`;
-  $("#stageHint").textContent="Get into position. The clock starts on GO.";
-  phase="countdown"; lockScreen();
-  let n=state.cd; const clk=$("#stageClock");
+  $("#stageHint").textContent=autoOn()?"Get set. After GO, the clock starts when your foot leaves the floor.":"Get into position. The clock starts on GO.";
+  phase="countdown"; lockScreen(); beep(1,.01);
+  startRecording();
+  cdLeft=state.cd; const clk=$("#stageClock");
   const tick=()=>{
     if(phase!=="countdown")return;
-    if(n>0){clk.textContent=n;clk.classList.remove("pop");void clk.offsetWidth;clk.classList.add("pop");beep(660);n--;cdTimer=setTimeout(tick,1000)}
-    else{go()}
+    if(cdLeft>0){clk.textContent=cdLeft;clk.classList.remove("pop");void clk.offsetWidth;clk.classList.add("pop");beep(660);cdLeft--;cdTimer=setTimeout(tick,1000)}
+    else go();
   };
   tick();
 }
 function go(){
-  phase="running"; beep(1200,.3);
-  const st=$("#stage"); st.classList.add("running");
-  $("#stageHint").textContent="Tap anywhere the second you come down";
-  t0=performance.now();
+  beep(1200,.3);
+  if(autoOn()&&cam.feet!=="up"){
+    phase="waiting"; $("#stageClock").textContent="GO"; $("#stageHint").textContent="Lift into your position. The clock starts when your foot leaves the floor.";
+  }else startRunning();
+}
+function startRunning(){
+  phase="running"; downSince=0; t0=performance.now();
+  $("#stage").classList.add("running");
+  $("#stageHint").textContent=autoOn()?"Hold it! The clock stops when both feet are down.":"Tap anywhere the second you come down";
   const clk=$("#stageClock"); clk.classList.remove("pop");
   const loop=()=>{if(phase!=="running")return;clk.textContent=fmt((performance.now()-t0)/1000);raf=requestAnimationFrame(loop)};
   loop();
 }
-function stopTimer(){
-  if(phase!=="running")return;
-  lastSecs=(performance.now()-t0)/1000; phase="idle"; cancelAnimationFrame(raf);
-  beep(440,.2); unlockScreen(); $("#stage").hidden=true; showSave();
+function poseTick(f){
+  if(!autoOn())return;
+  const now=performance.now();
+  if(phase==="waiting"&&f==="up"){beep(990,.1);startRunning()}
+  else if(phase==="running"){
+    if(f==="down"){if(!downSince)downSince=now;else if(now-downSince>180&&downSince-t0>400)stopTimer(downSince)}
+    else downSince=0;
+  }
 }
-function cancelTimer(){phase="idle";clearTimeout(cdTimer);cancelAnimationFrame(raf);unlockScreen();$("#stage").hidden=true}
-$("#stage").addEventListener("pointerdown",e=>{if(e.target.id==="cancelBtn")return;if(phase==="running"){e.preventDefault();stopTimer()}});
+function stopTimer(at){
+  if(phase!=="running")return;
+  lastSecs=((at||performance.now())-t0)/1000; phase="idle"; cancelAnimationFrame(raf);
+  overlayFinal=fmt(lastSecs)+"s ✓";
+  beep(440,.25); unlockScreen(); closeStage(); stopRecording(1200); showSave();
+}
+function cancelTimer(){
+  phase="idle"; clearTimeout(cdTimer); cancelAnimationFrame(raf); unlockScreen(); closeStage();
+  if(rec){const r=rec;rec=null;try{r.stop()}catch(e){}} recPromise=null; $("#recDot").hidden=true; overlayFinal="";
+}
+function closeStage(){$("#stage").hidden=true; $("#camView").appendChild(cam.canvas)}
+$("#stage").addEventListener("pointerdown",e=>{
+  if(e.target.id==="cancelBtn")return;
+  if(phase==="running"){e.preventDefault();stopTimer()}
+  else if(phase==="waiting"){e.preventDefault();startRunning()}
+});
 $("#cancelBtn").onclick=e=>{e.stopPropagation();cancelTimer()};
 document.addEventListener("keydown",e=>{
-  if(phase==="running"&&(e.code==="Space"||e.code==="Enter")){e.preventDefault();stopTimer()}
+  if((phase==="running"||phase==="waiting")&&(e.code==="Space"||e.code==="Enter")){e.preventDefault();phase==="running"?stopTimer():startRunning()}
   else if(phase!=="idle"&&e.code==="Escape")cancelTimer();
 });
 
-let pendingStars=0;
+let pendingStars=0, pendingVideoURL="";
 function showSave(){
   const p=posById(state.pos), prev=best(p.id,state.leg), isPB=!prev||lastSecs>prev.secs;
-  pendingStars=0;
+  const myRec=recPromise; pendingStars=0;
   const c=$("#saveCard"); c.hidden=false;
   c.innerHTML=`<div class="result">
     ${isPB&&prev?'<span class="pb">NEW PERSONAL BEST</span>':""}
-    <div class="label">${p.name} · ${state.leg==="L"?"Left":"Right"} leg</div>
+    <div class="label">${p.name} · ${legName(state.leg)} leg</div>
     <div class="time">${fmt(lastSecs)}s</div>
     <div class="sub">${lastSecs>=p.goal?"You hit the goal of "+p.goal+"s!":(p.goal-lastSecs).toFixed(1)+"s to go to hit the "+p.goal+"s goal"}</div>
+    <div id="vidSlot">${myRec?'<p class="sub">Finishing your video…</p>':""}</div>
     <div class="label" style="margin-top:6px">Rate your form</div>
     <div class="stars" id="starPick">${[1,2,3,4,5].map(i=>`<button data-s="${i}" aria-label="${i} star">★</button>`).join("")}</div>
     <textarea id="noteBox" rows="2" placeholder="Notes (optional): bent knee? wobbled at the end?"></textarea>
     <div class="row" style="justify-content:center">
-      <button class="btn" id="saveHold">Save hold</button>
+      <button class="btn yellow" id="saveHold">Save hold</button>
       <button class="btn ghost" id="tossHold">Don't save</button>
     </div></div>`;
+  let blob=null;
+  if(myRec)myRec.then(b=>{blob=b;const slot=$("#vidSlot");if(!slot)return;
+    if(b){if(pendingVideoURL)URL.revokeObjectURL(pendingVideoURL);pendingVideoURL=URL.createObjectURL(b);slot.innerHTML=`<video src="${pendingVideoURL}" controls playsinline></video>`}
+    else slot.innerHTML='<p class="sub">The video didn\'t record this time.</p>'});
   c.querySelectorAll("#starPick button").forEach(b=>b.onclick=()=>{pendingStars=+b.dataset.s;c.querySelectorAll("#starPick button").forEach(x=>x.classList.toggle("on",+x.dataset.s<=pendingStars))});
-  $("#saveHold").onclick=()=>{
-    state.holds.push({id:Date.now().toString(36),pos:p.id,leg:state.leg,secs:Math.round(lastSecs*100)/100,stars:pendingStars||3,note:$("#noteBox").value.trim(),ts:Date.now()});
-    save(); c.hidden=true; renderTime(); toast(isPB&&prev?"New personal best saved! 🎉":"Hold saved");
+  $("#saveHold").onclick=async()=>{
+    $("#saveHold").disabled=true;
+    if(myRec&&!blob)blob=await myRec;
+    const h={id:Date.now().toString(36),pos:p.id,leg:state.leg,secs:Math.round(lastSecs*100)/100,stars:pendingStars||3,note:$("#noteBox").value.trim(),ts:Date.now()};
+    if(blob){try{await vdb.put(h.id,{blob,type:blob.type,ts:h.ts});h.video=true}catch(e){toast("The hold saved, but the video couldn't. The iPad may be out of space.")}}
+    state.holds.push(h); save(); c.hidden=true; renderTime();
+    toast(isPB&&prev?"New personal best saved! 🎉":h.video?"Hold and video saved":"Hold saved");
   };
   $("#tossHold").onclick=()=>{c.hidden=true};
   c.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
-// ---------- Ranks ----------
+// ================= Rankings =================
 function renderRanks(){
   const rows=POS.map(p=>({p,b:best(p.id),n:state.holds.filter(h=>h.pos===p.id).length})).filter(r=>r.b).sort((a,b)=>b.b.secs-a.b.secs);
   const max=rows.length?rows[0].b.secs:1;
@@ -423,62 +675,99 @@ function renderRanks(){
     <div class="medal ${i<3?"m"+(i+1):""}">${i+1}</div>
     <div><b>${r.p.name}</b> ${r.b.secs>=r.p.goal?'<span class="pill ok">Goal hit</span>':'<span class="pill warn">'+(r.p.goal-r.b.secs).toFixed(1)+'s to goal</span>'}
       <div class="bar"><i style="width:${Math.max(4,r.b.secs/max*100)}%"></i></div></div>
-    <div class="t">${fmt(r.b.secs)}s<small>${r.b.leg==="L"?"Left":"Right"} · ${r.n} tries</small></div></div>`).join("")
+    <div class="t">${fmt(r.b.secs)}s<small>${legName(r.b.leg)} · ${r.n} tries</small></div></div>`).join("")
     :`<p class="sub">No holds yet. Time one on the first tab.</p>`;
   const top=[...state.holds].sort((a,b)=>b.secs-a.secs).slice(0,10);
-  $("#topTable").innerHTML=`<tr><th>#</th><th>Position</th><th>Leg</th><th class="num">Time</th><th>Form</th></tr>`+
-    top.map((h,i)=>`<tr><td>${i+1}</td><td>${posById(h.pos).name}</td><td>${h.leg}</td><td class="num"><b>${fmt(h.secs)}s</b></td><td class="starsmall">${starStr(h.stars)}</td></tr>`).join("");
+  $("#topTable").innerHTML=`<tr><th>#</th><th>Position</th><th>Leg</th><th class="num">Time</th><th>Form</th><th></th></tr>`+
+    top.map((h,i)=>`<tr><td>${i+1}</td><td>${posById(h.pos).name}</td><td>${h.leg}</td><td class="num"><b>${fmt(h.secs)}s</b></td><td class="starsmall">${starStr(h.stars)}</td><td>${h.video?`<button class="iconbtn" data-play="${h.id}">Watch</button>`:""}</td></tr>`).join("");
   $("#legTable").innerHTML=`<tr><th>Position</th><th class="num">Left</th><th class="num">Right</th><th>Gap</th></tr>`+
     POS.map(p=>{const L=best(p.id,"L"),R=best(p.id,"R");if(!L&&!R)return"";
       let gap='<span class="pill bow">Try other leg</span>';
       if(L&&R){const d=Math.abs(L.secs-R.secs),hi=Math.max(L.secs,R.secs);gap=d/hi>.25?`<span class="pill warn">${L.secs<R.secs?"Left":"Right"} needs work</span>`:'<span class="pill ok">Even</span>'}
       return `<tr><td>${p.name}</td><td class="num">${L?fmt(L.secs)+"s":"—"}</td><td class="num">${R?fmt(R.secs)+"s":"—"}</td><td>${gap}</td></tr>`}).join("");
+  wirePlay();
+}
+function wirePlay(){document.querySelectorAll("[data-play]").forEach(b=>b.onclick=()=>{showTab("videos");setTimeout(()=>document.getElementById("vid-"+b.dataset.play)?.scrollIntoView({behavior:"smooth",block:"center"}),300)})}
+
+// ================= Videos =================
+let vidURLs=[];
+async function renderVideos(){
+  vidURLs.forEach(u=>URL.revokeObjectURL(u)); vidURLs=[];
+  const list=state.holds.filter(h=>h.video).sort((a,b)=>b.ts-a.ts);
+  $("#vidEmpty").hidden=list.length>0; const grid=$("#vidGrid"); grid.innerHTML="";
+  let total=0;
+  for(const h of list){
+    let rec=null; try{rec=await vdb.get(h.id)}catch(e){}
+    if(!rec)continue;
+    total+=rec.blob.size; const url=URL.createObjectURL(rec.blob); vidURLs.push(url);
+    const el=document.createElement("div"); el.className="vid"; el.id="vid-"+h.id;
+    el.innerHTML=`<video src="${url}" controls playsinline preload="metadata"></video>
+      <div class="meta"><div class="row spread"><b>${posById(h.pos).name}</b><b>${fmt(h.secs)}s</b></div>
+      <div class="sub" style="margin:0">${legName(h.leg)} leg · ${dateStr(h.ts)} · <span class="starsmall">${starStr(h.stars)}</span></div>
+      <div class="row"><button class="btn small yellow" data-share>Save to Photos</button><button class="btn small ghost" data-vdel>Delete video</button></div></div>`;
+    el.querySelector("[data-share]").onclick=()=>shareVideo(h,rec.blob);
+    const del=el.querySelector("[data-vdel]");
+    del.onclick=async()=>{
+      if(!del.dataset.confirm){del.dataset.confirm=1;del.textContent="Tap again to delete";return}
+      try{await vdb.del(h.id)}catch(e){} h.video=false; save(); renderVideos(); toast("Video deleted");
+    };
+    grid.appendChild(el);
+  }
+  $("#vidStorage").textContent=list.length?`Videos use about ${(total/1048576).toFixed(0)} MB on this iPad.`:"";
+}
+async function shareVideo(h,blob){
+  const ext=(blob.type||"").includes("webm")?"webm":"mp4";
+  const file=new File([blob],`${posById(h.pos).name.replace(/\s+/g,"-")}-${fmt(h.secs)}s.${ext}`,{type:blob.type||"video/mp4"});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"Flyer hold"});return}
+  }catch(e){if(e&&e.name==="AbortError")return}
+  const a=document.createElement("a"); a.href=URL.createObjectURL(file); a.download=file.name; document.body.appendChild(a); a.click(); a.remove();
+  toast("If nothing saved, press and hold the video and choose Save.");
 }
 
-// ---------- Log ----------
+// ================= Log =================
 $("#logFilter").innerHTML=`<option value="">All positions</option>`+POS.map(p=>`<option value="${p.id}">${p.name}</option>`).join("");
 $("#logFilter").onchange=renderLog;
 function renderLog(){
   const f=$("#logFilter").value;
   const list=state.holds.filter(h=>!f||h.pos===f).sort((a,b)=>b.ts-a.ts);
-  $("#logTable").innerHTML=list.length?`<tr><th>Date</th><th>Position</th><th>Leg</th><th class="num">Time</th><th>Form</th><th></th></tr>`+
-    list.map(h=>`<tr><td>${dateStr(h.ts)}${h.example?' <span class="pill bow">example</span>':""}</td><td>${posById(h.pos).name}${h.note?`<br><small class="sub">${esc(h.note)}</small>`:""}</td><td>${h.leg}</td><td class="num"><b>${fmt(h.secs)}s</b></td><td class="starsmall">${starStr(h.stars)}</td><td><button class="del" data-id="${h.id}" aria-label="Delete hold">✕</button></td></tr>`).join("")
+  $("#logTable").innerHTML=list.length?`<tr><th>Date</th><th>Position</th><th>Leg</th><th class="num">Time</th><th>Form</th><th></th><th></th></tr>`+
+    list.map(h=>`<tr><td>${dateStr(h.ts)}${h.example?' <span class="pill bow">example</span>':""}</td><td>${posById(h.pos).name}${h.note?`<br><small class="sub">${esc(h.note)}</small>`:""}</td><td>${h.leg}</td><td class="num"><b>${fmt(h.secs)}s</b></td><td class="starsmall">${starStr(h.stars)}</td><td>${h.video?`<button class="iconbtn" data-play="${h.id}">Watch</button>`:""}</td><td><button class="iconbtn del" data-id="${h.id}" aria-label="Delete hold">✕</button></td></tr>`).join("")
     :`<tr><td class="sub">No holds saved yet.</td></tr>`;
-  document.querySelectorAll(".del").forEach(b=>b.onclick=()=>{
-    if(b.dataset.confirm){state.holds=state.holds.filter(h=>h.id!==b.dataset.id);save();renderLog();toast("Hold deleted")}
-    else{b.dataset.confirm=1;b.textContent="Delete?";b.style.color="var(--bow)";b.style.fontWeight="700";b.style.fontSize=".85rem"}
+  document.querySelectorAll(".del").forEach(b=>b.onclick=async()=>{
+    if(b.dataset.confirm){const id=b.dataset.id;state.holds=state.holds.filter(h=>h.id!==id);save();try{await vdb.del(id)}catch(e){}renderLog();toast("Hold deleted")}
+    else{b.dataset.confirm=1;b.textContent="Delete?";b.style.color="var(--rose)"}
   });
+  wirePlay();
 }
 $("#copyBackup").onclick=()=>{
-  const code=btoa(unescape(encodeURIComponent(JSON.stringify(state.holds.filter(h=>!h.example)))));
+  const code=btoa(unescape(encodeURIComponent(JSON.stringify(state.holds.filter(h=>!h.example).map(h=>({...h,video:false}))))));
   const box=$("#backupBox"); box.value=code;
-  navigator.clipboard?.writeText(code).then(()=>toast("Backup code copied"),()=>{box.select();toast("Code is in the box. Copy it from there.")}) ?? (box.select(),toast("Code is in the box. Copy it from there."));
+  const fallback=()=>{box.select();toast("The code is in the box. Copy it from there.")};
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(()=>toast("Backup code copied"),fallback);else fallback();
 };
 $("#loadBackup").onclick=()=>{
   try{const arr=JSON.parse(decodeURIComponent(escape(atob($("#backupBox").value.trim()))));
     if(!Array.isArray(arr))throw 0;
-    const ids=new Set(state.holds.map(h=>h.id)); let added=0;
     state.holds=state.holds.filter(h=>!h.example);
-    for(const h of arr){if(h&&posById(h.pos)&&typeof h.secs==="number"&&!ids.has(h.id)){state.holds.push(h);added++}}
+    const ids=new Set(state.holds.map(h=>h.id)); let added=0;
+    for(const h of arr){if(h&&posById(h.pos)&&typeof h.secs==="number"&&!ids.has(h.id)){state.holds.push({...h,video:false});added++}}
     save();renderLog();toast(`Loaded ${added} holds`);
   }catch(e){toast("That code didn't work. Copy the whole code and try again.")}
 };
 
-// ---------- Coach / Learn ----------
+// ================= Coach / Learn =================
 function coachList(){
-  const tips=[]; const real=state.holds;
-  if(!real.length) return [`<li>Time a few holds of each position on both legs. Your focus list will show up here.</li>`];
-  // farthest from goal
+  const tips=[]; const all=state.holds;
+  if(!all.length)return[`<li>Time a few holds of each position on both legs. Your focus list will show up here.</li>`];
   const gaps=POS.map(p=>{const b=best(p.id);return{p,b,ratio:b?b.secs/p.goal:0}}).filter(x=>x.b).sort((a,b)=>a.ratio-b.ratio);
   if(gaps[0]&&gaps[0].ratio<1){const g=gaps[0];tips.push(`<li><b>${g.p.name}</b> is furthest from its goal (${fmt(g.b.secs)}s of ${g.p.goal}s). Do its stretches below and try 5 holds a day. ${g.p.fixes.wobble}</li>`)}
-  // leg imbalance
   for(const p of POS){const L=best(p.id,"L"),R=best(p.id,"R");
-    if(L&&R&&Math.abs(L.secs-R.secs)/Math.max(L.secs,R.secs)>.25){const weak=L.secs<R.secs?"left":"right";tips.push(`<li>Your <b>${weak} leg</b> is weaker in ${p.name}. Start every practice with that side first while you're fresh.</li>`);break}
+    if(L&&R&&Math.abs(L.secs-R.secs)/Math.max(L.secs,R.secs)>.25){const weak=L.secs<R.secs?"left":"right";tips.push(`<li>Your <b>${weak} leg</b> is weaker in ${p.name}. Start every practice on that side while you're fresh.</li>`);break}
     if((L&&!R)||(R&&!L)){tips.push(`<li>You've only timed ${p.name} on your ${L?"left":"right"} leg. Try the ${L?"right":"left"} so you know both sides.</li>`);break}}
-  // low form
-  const low=POS.map(p=>{const hs=real.filter(h=>h.pos===p.id);return{p,avg:hs.length?hs.reduce((s,h)=>s+h.stars,0)/hs.length:5}}).sort((a,b)=>a.avg-b.avg)[0];
+  const low=POS.map(p=>{const hs=all.filter(h=>h.pos===p.id);return{p,avg:hs.length?hs.reduce((s,h)=>s+h.stars,0)/hs.length:5}}).sort((a,b)=>a.avg-b.avg)[0];
   if(low&&low.avg<3.5)tips.push(`<li>Your form ratings are lowest in <b>${low.p.name}</b>. Hold it shorter but perfect. ${low.p.fixes.form}</li>`);
-  // never tried
+  if(all.some(h=>h.video))tips.push(`<li>Watch your videos on the <b>Videos</b> tab and go down the body check list for that position. Look at your standing knee first.</li>`);
   const untried=POS.filter(p=>!best(p.id));
   if(untried.length)tips.push(`<li>Not timed yet: ${untried.map(p=>p.name).join(", ")}. Give ${untried.length>1?"them":"it"} a try.</li>`);
   if(!tips.length)tips.push(`<li>You've hit every goal. Raise the bar: aim for 2 extra seconds on each and keep your form at 4–5 stars.</li>`);
@@ -486,7 +775,7 @@ function coachList(){
 }
 function renderLearn(){
   $("#coach").innerHTML=`<h3>Your focus list</h3><ul class="clean">${coachList().join("")}</ul>`;
-  $("#learnList").innerHTML=POS.map(p=>{const b=best(p.id);return `<details class="pos" id="learn-${p.id}">
+  $("#learnList").innerHTML=POS.map(p=>{const b=best(p.id);return `<details class="pos">
     <summary>${figSVG(p)}<div><h3>${p.name}</h3><span class="sub">${b?"Best "+fmt(b.secs)+"s":"Not timed yet"} · goal ${p.goal}s</span></div><span aria-hidden="true">▾</span></summary>
     <div class="body">
       <p style="margin:0">${p.what}</p>
@@ -510,5 +799,8 @@ function stretchTimer(btn){
   btn.dataset.run=id;
 }
 
+setFeet("off");
 renderTime();
 </script>
+</body>
+</html>
